@@ -3,7 +3,7 @@
 
 import yaml
 import re
-
+import socket
 from prometheus_client.core import GaugeMetricFamily
 
 from utils import get_module_logger
@@ -395,7 +395,7 @@ class NameNodeMetricCollector(MetricCollector):
                     label = [self.cluster, node, info["infoAddr"], info["infoSecureAddr"], info["xferaddr"], info["version"], self.target]
                     items = ["lastContact", "usedSpace", "adminState", "nonDfsUsedSpace", "capacity", "numBlocks",
                              "used", "remaining", "blockScheduled", "blockPoolUsed", "blockPoolUsedPercent", "volfails"]
-                    dns.add("http://"+info["infoAddr"]+"/jmx")
+                    dns.add("https://"+(node["infoAddr"].split(":")[0])+"9865/jmx")
                     for item in items:
                         value = info[item] if item in info else 0
                         if item == "adminState":
